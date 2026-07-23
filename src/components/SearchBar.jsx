@@ -20,7 +20,7 @@ export default function SearchBar({ initialValue = '', onSearch, autoFocus }) {
   const { data, loading } = useGithubData(
     shouldSearch ? `search-users:${debouncedInput}` : null,
     ({ token, signal }) => searchUsers(debouncedInput, { token, signal }),
-    { enabled: shouldSearch, staleMs: 60_000, deps: [debouncedInput] },
+    { enabled: shouldSearch, staleMs: 60_000, deps: [debouncedInput], trackRateLimit: false },
   )
 
   const options = useMemo(() => data?.items ?? [], [data])

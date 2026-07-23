@@ -7,7 +7,11 @@ import { getCached, setCached } from '../utils/cache.js'
  * Reads a fresh localStorage cache entry before hitting the network, and
  * reports rate-limit headers back to GithubContext so the UI can warn early.
  */
-export function useGithubData(cacheKey, fetcher, { enabled = true, staleMs = 5 * 60 * 1000, deps = [] } = {}) {
+export function useGithubData(
+  cacheKey,
+  fetcher,
+  { enabled = true, staleMs = 5 * 60 * 1000, deps = [], trackRateLimit = true } = {},
+) {
   const { token, recordRateLimit } = useGithub()
   const [state, setState] = useState({ data: null, error: null, loading: enabled })
 
@@ -31,12 +35,12 @@ export function useGithubData(cacheKey, fetcher, { enabled = true, staleMs = 5 *
       try {
         const { data, rateLimit } = await fetcher({ token, signal: controller.signal })
         if (cancelled) return
-        if (rateLimit) recordRateLimit(rateLimit)
+        if (rateLimit && trackRateLimit) recordRateLimit(rateLimit)
         if (cacheKey) setCached(cacheKey, data)
         setState({ data, error: null, loading: false })
       } catch (err) {
         if (cancelled || err.name === 'AbortError') return
-        if (err.rateLimit) recordRateLimit(err.rateLimit)
+        if (err.rateLimit && trackRateLimit) recordRateLimit(err.rateLimit)
         setState({ data: null, error: err, loading: false })
       }
     }
