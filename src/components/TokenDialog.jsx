@@ -38,8 +38,9 @@ export default function TokenDialog({ open, onClose }) {
       <DialogContent>
         <DialogContentText sx={{ mb: 2 }}>
           Senza token GitHub concede 60 richieste/ora. Con un token (anche senza permessi, basta
-          uno "classic" senza scope) il limite sale a 5000/ora. Il token resta solo in questa
-          scheda: viene salvato in <code>sessionStorage</code> e mai inviato altrove.
+          uno "classic" senza scope) il limite sale a 5000/ora. Il token viene salvato in questo
+          browser (<code>localStorage</code>) e resta finché non lo rimuovi da qui; non viene mai
+          inviato altrove.
         </DialogContentText>
         <TextField
           autoFocus

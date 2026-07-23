@@ -50,7 +50,7 @@ npm run lint      # esegue ESLint
 GitHub concede **60 richieste/ora** senza autenticazione (per IP) e **5000 richieste/ora** con un token. Cliccando l'icona della chiave in alto puoi incollare un tuo [Personal Access Token](https://github.com/settings/tokens) (anche "classic" senza alcuno scope, sufficiente per i soli endpoint pubblici usati qui) per alzare il limite.
 
 Il token:
-- viene salvato **solo** in `sessionStorage` del browser (sparisce chiudendo la scheda);
+- viene salvato in `localStorage` del browser e resta finché non lo rimuovi dall'app (non scade chiudendo la scheda o il browser);
 - viene inviato **esclusivamente** a `api.github.com`, mai ad altri host o servizi terzi;
 - non è mai scritto nel codice, nel bundle o nel repository.
 

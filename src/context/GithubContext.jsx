@@ -4,15 +4,15 @@ const TOKEN_KEY = 'gh_pat_token'
 const GithubContext = createContext(null)
 
 export function GithubProvider({ children }) {
-  const [token, setTokenState] = useState(() => sessionStorage.getItem(TOKEN_KEY) || '')
+  const [token, setTokenState] = useState(() => localStorage.getItem(TOKEN_KEY) || '')
   const [rateLimit, setRateLimit] = useState(null)
 
   const setToken = useCallback((value) => {
     setTokenState(value)
     if (value) {
-      sessionStorage.setItem(TOKEN_KEY, value)
+      localStorage.setItem(TOKEN_KEY, value)
     } else {
-      sessionStorage.removeItem(TOKEN_KEY)
+      localStorage.removeItem(TOKEN_KEY)
     }
   }, [])
 
