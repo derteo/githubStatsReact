@@ -7,10 +7,12 @@
       // Single Page Apps for GitHub Pages
       // https://github.com/rafgraph/spa-github-pages
       // GitHub Pages serves this file for any unknown path (e.g. a deep link
-      // or a refresh on /githubStatsReact/some-user). It re-encodes the path
-      // into a query string and redirects to index.html, which decodes it
-      // back via history.replaceState before React Router reads the URL.
-      var pathSegmentsToKeep = 1
+      // or a refresh on /some-user). It re-encodes the path into a query
+      // string and redirects to index.html, which decodes it back via
+      // history.replaceState before React Router reads the URL.
+      // 0 segments to keep: on the custom domain the app lives at the
+      // root, there's no /githubStatsReact/ prefix to preserve.
+      var pathSegmentsToKeep = 0
 
       var l = window.location
       l.replace(

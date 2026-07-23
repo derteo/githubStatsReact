@@ -2,7 +2,7 @@
 
 Dashboard React per esplorare le statistiche pubbliche di un utente o di un'organizzazione GitHub: profilo, repository, linguaggi usati, attività recente e confronto diretto tra due account. Funziona interamente lato client, chiamando le API pubbliche di GitHub direttamente dal browser.
 
-**Demo:** [derteo.github.io/githubStatsReact](https://derteo.github.io/githubStatsReact/)
+**Demo:** [stats.matteeoderosa.it](https://stats.matteeoderosa.it/)
 
 ## Funzionalità
 
@@ -58,7 +58,7 @@ Il token:
 
 ## Deploy su GitHub Pages
 
-Il progetto è configurato per essere pubblicato come *project page* su GitHub Pages, all'indirizzo `https://derteo.github.io/githubStatsReact/`.
+Il progetto è pubblicato su GitHub Pages dietro il dominio custom `stats.matteeoderosa.it`, servito alla radice (non sotto `/githubStatsReact/`).
 
 1. Sul repository GitHub, in **Settings → Pages**, imposta come sorgente il branch `gh-pages` (verrà creato al primo deploy).
 2. Pubblica con:
@@ -68,11 +68,21 @@ Il progetto è configurato per essere pubblicato come *project page* su GitHub P
    ```
 
    Lo script esegue prima la build (`predeploy`) e poi carica il contenuto di `dist/` sul branch `gh-pages` tramite [`gh-pages`](https://www.npmjs.com/package/gh-pages).
+3. **DNS**: presso il tuo provider DNS, aggiungi un record `CNAME` per il sottodominio che punta all'host di GitHub Pages:
+
+   ```
+   stats   CNAME   derteo.github.io.
+   ```
+
+4. Su GitHub, in **Settings → Pages → Custom domain**, imposta `stats.matteeoderosa.it` (GitHub legge/scrive anche il file [`public/CNAME`](public/CNAME) incluso nel repo) e, una volta propagato il DNS e emesso il certificato, spunta **Enforce HTTPS**.
 
 Note tecniche sulla configurazione Pages già presenti nel progetto:
-- `base: '/githubStatsReact/'` in [`vite.config.js`](vite.config.js), così gli asset vengono referenziati con il path corretto sotto il nome del repository.
-- `basename={import.meta.env.BASE_URL}` su `BrowserRouter` in [`src/main.jsx`](src/main.jsx), così il routing client-side rispetta lo stesso path.
-- [`public/404.html`](public/404.html) + uno script inline in [`index.html`](index.html) implementano il [trick "SPA per GitHub Pages"](https://github.com/rafgraph/spa-github-pages): senza questo, ricaricare la pagina su un URL profondo (es. `/githubStatsReact/derteo`) darebbe un 404, perché GitHub Pages serve solo file statici e non conosce le route di React Router.
+- `base: '/'` in [`vite.config.js`](vite.config.js): sul dominio custom l'app vive alla radice, non sotto il nome del repository.
+- `basename={import.meta.env.BASE_URL}` su `BrowserRouter` in [`src/main.jsx`](src/main.jsx), coerente con lo stesso base path.
+- [`public/404.html`](public/404.html) + uno script inline in [`index.html`](index.html) implementano il [trick "SPA per GitHub Pages"](https://github.com/rafgraph/spa-github-pages): senza questo, ricaricare la pagina su un URL profondo (es. `/derteo`) darebbe un 404, perché GitHub Pages serve solo file statici e non conosce le route di React Router.
+- [`public/CNAME`](public/CNAME): contiene il dominio custom, così ogni `npm run deploy` lo ripubblica insieme al resto di `dist/` invece di doverlo re-impostare a mano dopo ogni deploy.
+
+> Se in futuro il progetto tornasse a essere servito sotto `derteo.github.io/githubStatsReact/` invece che sul dominio custom, vanno invertite le prime due modifiche sopra (`base: '/githubStatsReact/'` e rimozione di `public/CNAME`), altrimenti gli asset punterebbero al path sbagliato.
 
 ## Struttura del progetto
 
