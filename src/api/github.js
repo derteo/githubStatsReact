@@ -1,4 +1,9 @@
-const API_BASE = 'https://api.github.com'
+const GITHUB_API = 'https://api.github.com'
+
+// Se impostato (vedi worker/README), le richieste senza token personale passano da un proxy
+// che usa un token condiviso lato server: i visitatori non devono crearne uno.
+const PROXY_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/+$/, '')
+export const USES_SHARED_TOKEN = Boolean(PROXY_BASE)
 
 export class GithubApiError extends Error {
   constructor(message, { status, rateLimit } = {}) {
@@ -23,7 +28,9 @@ function parseRateLimit(headers) {
 }
 
 async function request(path, { token, signal, params, accept } = {}) {
-  const url = new URL(path.startsWith('http') ? path : `${API_BASE}${path}`)
+  // Un token personale va sempre e solo a GitHub, mai al proxy.
+  const base = token || !PROXY_BASE ? GITHUB_API : PROXY_BASE
+  const url = new URL(path.startsWith('http') ? path : `${base}${path}`)
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {

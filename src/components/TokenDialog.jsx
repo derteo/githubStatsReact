@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { useGithub } from '../context/GithubContext.jsx'
+import { USES_SHARED_TOKEN } from '../api/github.js'
 
 export default function TokenDialog({ open, onClose }) {
   const { token, setToken } = useGithub()
@@ -37,10 +38,11 @@ export default function TokenDialog({ open, onClose }) {
       <DialogTitle>Personal Access Token</DialogTitle>
       <DialogContent>
         <DialogContentText sx={{ mb: 2 }}>
-          Senza token GitHub concede 60 richieste/ora. Con un token (anche senza permessi, basta
-          uno "classic" senza scope) il limite sale a 5000/ora. Il token viene salvato in questo
-          browser (<code>localStorage</code>) e resta finché non lo rimuovi da qui; non viene mai
-          inviato altrove.
+          {USES_SHARED_TOKEN
+            ? 'Il sito usa già un token condiviso: non serve impostarne uno. Se vuoi un limite tutto tuo (5000 richieste/ora), puoi inserirne uno qui sotto (anche "classic" senza scope). '
+            : 'Senza token GitHub concede 60 richieste/ora. Con un token (anche senza permessi, basta uno "classic" senza scope) il limite sale a 5000/ora. '}
+          Il token viene salvato in questo browser (<code>localStorage</code>) e resta finché non lo
+          rimuovi da qui; viene inviato solo a <code>api.github.com</code>.
         </DialogContentText>
         <TextField
           autoFocus

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Alert from '@mui/material/Alert'
 import Collapse from '@mui/material/Collapse'
 import { useGithub } from '../context/GithubContext.jsx'
+import { USES_SHARED_TOKEN } from '../api/github.js'
 import { formatCountdown } from '../utils/format.js'
 
 const LOW_THRESHOLD = 5
@@ -29,7 +30,7 @@ export default function RateLimitBanner() {
         {isExhausted
           ? `Rate limit GitHub esaurito (${rateLimit.limit}/h). Si sblocca tra ${formatCountdown(secondsRemaining)}.`
           : `Rate limit GitHub quasi esaurito: ${rateLimit.remaining}/${rateLimit.limit} richieste rimaste.`}
-        {!hasToken && ' Aggiungi un Personal Access Token per salire a 5000 richieste/ora.'}
+        {!hasToken && !USES_SHARED_TOKEN && ' Aggiungi un Personal Access Token per salire a 5000 richieste/ora.'}
       </Alert>
     </Collapse>
   )

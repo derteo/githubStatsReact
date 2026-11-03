@@ -1,0 +1,10 @@
+name = "githubstats-proxy"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+# Siti autorizzati a usare il proxy (separati da virgola, senza "/" finale).
+ALLOWED_ORIGINS = "https://stats.matteeoderosa.it,http://localhost:5173"
+
+# Il token NON va scritto qui: si imposta come segreto con
+#   npx wrangler secret put GITHUB_TOKEN

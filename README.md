@@ -24,7 +24,7 @@ Dashboard React per esplorare le statistiche pubbliche di un utente o di un'orga
 - [React Router 8](https://reactrouter.com) (routing client-side, `BrowserRouter`)
 - [MUI 9](https://mui.com) (componenti UI, tema, icone) + [MUI X Charts](https://mui.com/x/react-charts/)
 - [react-markdown](https://github.com/remarkjs/react-markdown) + [remark-gfm](https://github.com/remarkjs/remark-gfm) per il rendering dei README
-- Nessun backend: tutte le chiamate vanno direttamente a `api.github.com` dal browser
+- Nessun backend necessario: le chiamate vanno a `api.github.com` dal browser, oppure (opzionale) a un proxy Cloudflare Worker con token condiviso
 
 ## Avvio in locale
 
@@ -54,7 +54,11 @@ Il token:
 - viene inviato **esclusivamente** a `api.github.com`, mai ad altri host o servizi terzi;
 - non è mai scritto nel codice, nel bundle o nel repository.
 
-> Non inserire un tuo token direttamente nel codice sorgente o come variabile d'ambiente di build: finirebbe in chiaro nel bundle JavaScript pubblicato, leggibile da chiunque ispezioni il sito. Un eventuale innalzamento del limite condiviso tra tutti i visitatori richiederebbe un piccolo backend/proxy che tenga il token lato server — non ancora implementato in questo progetto.
+> Non inserire un tuo token direttamente nel codice sorgente o come variabile d'ambiente di build: finirebbe in chiaro nel bundle JavaScript pubblicato, leggibile da chiunque ispezioni il sito.
+
+### Token condiviso per tutti i visitatori (opzionale)
+
+Per far usare a tutti il limite da 5000 richieste/ora senza che creino un token, c'è un piccolo proxy in [`worker/`](worker/README.md) (Cloudflare Worker gratuito) che tiene il token come segreto lato server. Con `VITE_API_BASE` impostato l'app lo usa; chi ha un proprio token continua a usare quello, direttamente verso GitHub.
 
 ## Deploy su GitHub Pages
 
@@ -87,6 +91,7 @@ Note tecniche sulla configurazione Pages già presenti nel progetto:
 ## Struttura del progetto
 
 ```
+worker/                    # proxy opzionale con token condiviso (Cloudflare Worker)
 src/
 ├── api/github.js          # client fetch verso api.github.com, parsing errori e rate limit
 ├── components/            # componenti UI (card, grafici, modali, layout)
